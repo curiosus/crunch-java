@@ -38,3 +38,7 @@ animation = "right"
 position = Vector2( -1.10956, 2.7739 )
 shape = SubResource( 2 )
 
+[node name="RayCast2D" type="RayCast2D" parent="."]
+enabled = true
+cast_to = Vector2( 2000, 0 )
+
