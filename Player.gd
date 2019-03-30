@@ -3,7 +3,7 @@ extends Area2D
 export var speed = 400
 var screen_size
 
-
+const BULLET = preload("res://Bullet.tscn")
 
 onready var raycast = get_node("RayCast2D")
 
@@ -61,10 +61,11 @@ func _process(delta):
 		$AnimatedSprite.animation = "up"
 #		$AnimatedSprite.flip_v = velocity.y > 0
 
-#	var look_vector = get_global_mouse_position() - global_position
-#	global_rotation = atan2(look_vector.y, look_vector.x)
+	var look_vector = get_global_mouse_position() - global_position
+	global_rotation = atan2(look_vector.y, look_vector.x)
 
 	if Input.is_action_just_pressed("shoot"):
+		fire()
 		var coll = raycast.get_collider()		
 		if raycast.is_colliding() && coll.has_method("kill"):
 			coll.kill()
@@ -74,4 +75,7 @@ func kill():
 	print("Player killed")
 	get_tree().reload_current_scene()
 
-
+func fire():
+	var bullet = BULLET.instance()
+	bullet.global_position = global_position
+	get_parent().add_child(bullet)

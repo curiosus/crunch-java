@@ -1,14 +1,16 @@
 extends KinematicBody2D
 
-const MOVE_SPEED = 100
+const MOVE_SPEED = 50
 
 onready var raycast = get_node("RayCast2D")
+
 
 var player = null
 
 
 func _ready():
 	add_to_group("enemies")
+	
 	
 func _physics_process(delta):
 	if player == null:
@@ -19,13 +21,14 @@ func _physics_process(delta):
 	global_rotation = atan2(vector_to_player.y, vector_to_player.x)
 	move_and_collide(vector_to_player * MOVE_SPEED * delta)
 	
+
+	
 	if raycast.is_colliding():
 		var coll = raycast.get_collider()
 		if coll.name == "Player":
 			coll.kill()
 
 func kill():
-	print("Enemy killed")
 	queue_free()
 	
 func set_player(p):
