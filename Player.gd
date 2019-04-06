@@ -3,6 +3,7 @@ extends Area2D
 export var speed = 400
 var screen_size
 
+
 const BULLET = preload("res://Bullet.tscn")
 
 onready var raycast = get_node("RayCast2D")
