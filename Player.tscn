@@ -42,3 +42,6 @@ shape = SubResource( 2 )
 enabled = true
 cast_to = Vector2( 2000, 0 )
 
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+
