@@ -1,47 +1,27 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Player.gd" type="Script" id=1]
-[ext_resource path="res://player_walk1.png" type="Texture" id=2]
-[ext_resource path="res://player_walk2.png" type="Texture" id=3]
-[ext_resource path="res://player_up1.png" type="Texture" id=4]
-[ext_resource path="res://player_up2.png" type="Texture" id=5]
+[ext_resource path="res://Player.png" type="Texture" id=2]
+[ext_resource path="res://Gun.tscn" type="PackedScene" id=3]
 
-[sub_resource type="SpriteFrames" id=1]
-animations = [ {
-"frames": [ ExtResource( 2 ), ExtResource( 3 ) ],
-"loop": true,
-"name": "right",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 4 ), ExtResource( 5 ) ],
-"loop": true,
-"name": "up",
-"speed": 5.0
-} ]
+[sub_resource type="CircleShape2D" id=1]
+radius = 30.0
 
-[sub_resource type="CapsuleShape2D" id=2]
-radius = 24.133
-height = 19.3002
-
-[node name="Player" type="Area2D"]
+[node name="Player" type="KinematicBody2D"]
+collision_layer = 2
+collision_mask = 45
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_group_": true
-}
 
-[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-scale = Vector2( 0.5, 0.5 )
-frames = SubResource( 1 )
-animation = "right"
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( -1.10956, 2.7739 )
-shape = SubResource( 2 )
+shape = SubResource( 1 )
 
-[node name="RayCast2D" type="RayCast2D" parent="."]
-enabled = true
-cast_to = Vector2( 2000, 0 )
+[node name="Gun" parent="." instance=ExtResource( 3 )]
+position = Vector2( 44.1057, 0.735092 )
 
-[node name="Camera2D" type="Camera2D" parent="."]
-current = true
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
 
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

@@ -1,21 +1,23 @@
-extends Sprite
+extends KinematicBody2D
 
-
-
-const VELOCITY	= Vector2(500, 0)
 var screen_size
+var velocity = Vector2(500, 0)
+var speed = 1000
 
 func _ready():
-	screen_size = get_viewport_rect().size
-	
-func _process(delta):
-	move(delta)
-	remove_when_off_screen()
-	
-	
-func move(delta):
-	global_position += VELOCITY * delta
-	
-func remove_when_off_screen():
-	if global_position.x > screen_size.x:
-		queue_free()
+    screen_size = get_viewport_rect().size
+
+func start(pos, dir):
+    rotation = dir
+    position = pos
+    velocity = Vector2(speed, 0).rotated(rotation)
+
+func _physics_process(delta):
+    var collision = move_and_collide(velocity * delta)
+    if collision &&  collision.collider.has_method("hit"):
+        collision.collider.hit()
+        queue_free()
+
+
+
+

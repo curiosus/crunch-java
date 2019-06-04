@@ -1,82 +1,69 @@
-extends Area2D
+extends KinematicBody2D
 
-export var speed = 400
-var screen_size
-
-
+const SPEED = 100
+const MAX_SPEED = 200
+const FRICTION = 0.1
 const BULLET = preload("res://Bullet.tscn")
 
-onready var raycast = get_node("RayCast2D")
+var motion = Vector2()
+var reload_time = 1.0
+var reloading = 0.0
+var alive = true
 
 func _ready():
-	screen_size = get_viewport_rect().size
-	yield(get_tree(), "idle_frame")
-	get_tree().call_group("enemies", "set_player", self)
-	
-	
-	
+    Global.Player = self
+
 func _process(delta):
-	var velocity = Vector2()
-	
-	
-	
-	if Input.is_action_pressed("ui_right"):
-		velocity.x += speed
-	if Input.is_action_pressed("ui_left"):
-		velocity.x -= speed
-	if Input.is_action_pressed("ui_down"):
-		velocity.y += speed
-	if Input.is_action_pressed("ui_up"):
-		velocity.y -= speed
+    reloading -= delta
+    update_motion(delta)
+    move_and_slide(motion)
 
+func _input(event):
+    if event.is_action_pressed("scroll_up"):
+        $Camera2D.zoom = $Camera2D.zoom - Vector2(0.1, 0.1)
+    elif event.is_action_pressed("scroll_down"):
+        $Camera2D.zoom = $Camera2D.zoom + Vector2(0.1, 0.1)
+    if event.is_action_pressed("fire"):
+        fire(event)
 
+func fire(event):
+    if reloading < 0.0:        
+        look_at(get_global_mouse_position())
+        var rot = rotation
+        var bullet = BULLET.instance()
+        var fire_position = Vector2($Gun.global_position.x, $Gun.global_position.y)
+        bullet.position = $Gun.position
+        bullet.start(fire_position, rot)
+        get_parent().add_child(bullet)
+        reloading = reload_time        
 
-	
-	#var r = randi()%4+1
-#	if r == 1:
-#		velocity.x += speed * 20
-#	if r == 2:
-#		velocity.x -= speed * 20
-#	if r == 3:
-#		velocity.y += speed * 20 
-#	if r == 4:
-#		velocity.y -= speed * 20
+func update_motion(delta):
+    look_at(get_global_mouse_position())
+    if Input.is_action_pressed("ui_right"):
+        motion.x = clamp((motion.x + SPEED), 0, MAX_SPEED)
+    elif Input.is_action_pressed("ui_left"):
+        motion.x = clamp((motion.x - SPEED), -MAX_SPEED, 0)
+    else:
+        motion.x = lerp(motion.x, 0, FRICTION)
 
-	
-		
-	if velocity.length() > 0:
-		velocity = velocity.normalized() * speed
-		$AnimatedSprite.play()
-	else:
-		$AnimatedSprite.stop()
-		
-	position += velocity * delta
-	position.x = clamp(position.x, 0, screen_size.x)
-	position.y = clamp(position.y, 0, screen_size.y)
-	
-	if velocity.x != 0:
-		$AnimatedSprite.animation = "right"
-		$AnimatedSprite.flip_v = false
-		$AnimatedSprite.flip_h = velocity.x < 0
-	elif velocity.y != 0:
-		$AnimatedSprite.animation = "up"
-#		$AnimatedSprite.flip_v = velocity.y > 0
+    if Input.is_action_pressed("ui_up"):
+        motion.y = clamp((motion.y - SPEED), -MAX_SPEED, 0)
+    elif Input.is_action_pressed("ui_down"):
+        motion.y = clamp((motion.y + SPEED), 0, MAX_SPEED)
+    else:
+        motion.y = lerp(motion.y, 0, FRICTION)
 
-#	var look_vector = get_global_mouse_position() - global_position
-#	global_rotation = atan2(look_vector.y, look_vector.x)
+func hit():
+    visible = false
+    alive = false
+    if $Timer.is_stopped():
+        $Timer.start()
 
-	if Input.is_action_just_pressed("shoot"):
-		fire()
-		var coll = raycast.get_collider()		
-		if raycast.is_colliding() && coll.has_method("kill"):
-			coll.kill()
-			
-	
-func kill():
-	print("Player killed")
-	get_tree().reload_current_scene()
+func respawn():
+    print("Respawn")
+    visible = true
+    alive = true
+       
 
-func fire():
-	var bullet = BULLET.instance()
-	bullet.global_position = global_position
-	get_parent().add_child(bullet)
+func _on_Timer_timeout():
+    respawn()
