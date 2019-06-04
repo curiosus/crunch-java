@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Navigation2D.gd" type="Script" id=1]
 [ext_resource path="res://Destinations.gd" type="Script" id=2]
@@ -6,7 +6,6 @@
 [ext_resource path="res://Walls.gd" type="Script" id=4]
 [ext_resource path="res://Player.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Prisoner.tscn" type="PackedScene" id=6]
-[ext_resource path="res://SciFiFreakout.wav" type="AudioStream" id=7]
 
 [sub_resource type="NavigationPolygon" id=1]
 vertices = PoolVector2Array( 4672, 4352, 4480, 3584, 4480, 3456, 4608, 1472, 4736, 512, 4480, 3264, 4544, 1344, 4480, 1152, 2432, 3072, 2496, 4224, 2048, 3712, 2048, 2880, 4416, 3712, 4352, 4224, 4416, 1664, 4352, 3264, 4352, 2560, 4416, 3520, 4160, 3456, 4160, 3520, 4160, 1408, 4032, 1344, 1600, 2560, 1600, 2816, 1152, 2816, 1152, 2560, 1408, 1664, 3072, 1728, 3072, 2112, 2880, 2048, 2880, 896, 2048, 2816, 2432, 2560, 2432, 2944, 2688, 2304, 2048, 1472, 2752, 704, 2816, 2944, 2752, 2752, 4160, 2752, 3264, 1728, 4096, 896, 4096, 2112, 3648, 2112, 3712, 1728, 4288, 1664, 4288, 2304, 3456, 2368, 4288, 1152, 4288, 704, 128, 512, 1664, 1472, 1664, 896, 1856, 1664, 1856, 2560, 1152, 2496, 1088, 2432, 1152, 1664, 1408, 896, 576, 2432, 576, 1664, 1152, 896, 960, 896, 960, 1408, 384, 1408, 4160, 4032, 2624, 4032, 2624, 3264, 2816, 3264, 2816, 3072, 1600, 3072, 1856, 3072, 1856, 3520, 576, 3520, 576, 3008, 1152, 3008, 1600, 2944, 4352, 3712, 128, 4352, 320, 3712, 384, 2816, 384, 2624, 1792, 2880, 1728, 2880, 1024, 2624, 3264, 2304, 3520, 1728 )
@@ -104,10 +103,4 @@ position = Vector2( 3520, 2944 )
 
 [node name="Prisoner6" parent="Prisoners" instance=ExtResource( 6 )]
 position = Vector2( 3456, 4288 )
-
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource( 7 )
-volume_db = 3.355
-autoplay = true
-max_distance = 20000.0
 
