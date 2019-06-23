@@ -4,11 +4,13 @@ const SPEED = 100
 const MAX_SPEED = 200
 const FRICTION = 0.1
 const BULLET = preload("res://Bullet.tscn")
+const HEALTH = 50
 
 var motion = Vector2()
 var reload_time = 1.0
 var reloading = 0.0
 var alive = true
+var current_health = HEALTH
 
 func _ready():
     Global.Player = self
@@ -53,14 +55,17 @@ func update_motion(delta):
     else:
         motion.y = lerp(motion.y, 0, FRICTION)
 
-func hit():
-    visible = false
-    alive = false
-    if $Timer.is_stopped():
-        $Timer.start()
+func hit(damage):
+    current_health = current_health - damage
+    if current_health <= 0:
+        visible = false
+        alive = false
+        if $Timer.is_stopped():
+            $Timer.start()
+
 
 func respawn():
-    print("Respawn")
+    current_health = HEALTH
     visible = true
     alive = true
        

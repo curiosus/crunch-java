@@ -54,4 +54,7 @@ func in_line_of_sight():
     var distance_to_target = Player.global_position.distance_to(global_position)
     var target_in_range = distance_to_target < max_detection_range
     return obstacle.collider == Player and target_in_range
+    
+func hit(damage):
+    pass
         

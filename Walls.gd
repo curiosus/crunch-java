@@ -3,6 +3,6 @@ extends TileMap
 func _ready():
     Global.walls = self
     
-func hit():
+func hit(damage):
     pass
 

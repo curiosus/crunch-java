@@ -79,7 +79,7 @@ func is_target_los():
     
         
 
-func hit():
+func hit(damage):
     queue_free()
 
 

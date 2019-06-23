@@ -4,4 +4,6 @@ var Player
 var navigation
 var destinations
 var walls
+var door
+var bullet
 
