@@ -2,7 +2,7 @@ extends KinematicBody2D
 
 var screen_size
 var velocity = Vector2(500, 0)
-var speed = 1000
+export var speed = 1000
 export var damage = 10
 
 func _ready():
