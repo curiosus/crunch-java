@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="100" height="50" tilewidth="64" tileheight="64" infinite="0" nextlayerid="3" nextobjectid="112">
+ <tileset firstgid="1" source="tileset.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="100" height="50">
+  <properties>
+   <property name="destination" type="bool" value="true"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJztmTESwyAMwJL2/3/u0KV3HUKAGNlo0JjDthKMyXkcxykoXoJAHyz0wUIfX96AGFp82JPu13KkTi0+emNbXZ8VPkafeepd1oc+MlLVR9beVrV/3Fkvu49q5ytSbFH7FRlSvmQfUTPZU/mSz1fREPqHPv7zWNnbIuZzWfNerY5D2n1Q7j53wO+DhT5Y6IOFPlj0+IiavVrnhiz3ZhV8RDxzReT5Uh8s9MFCHyz0wYLuo9J/yew+dkQfLHp97LJ/ZPAh+qDRe9ZovftZnV8rlH9jozWr4oOCPljooxZ3few4G9N9zFpDxn3MXKMihP5xtT/pI9bH0zFmItqH/eM618j53PNVHL93DtaRhT5Y6IPFjL4kc/kA3AYk6g==
+  </data>
+ </layer>
+ <objectgroup id="2" name="collision-layer">
+  <properties>
+   <property name="destination" type="bool" value="true"/>
+  </properties>
+  <object id="34" x="-3136" y="1728"/>
+  <object id="37" x="0" y="0" width="6400" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="38" x="0" y="64" width="64" height="3136">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="39" x="64" y="3136" width="6272" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="42" x="6336" y="64" width="64" height="3072">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="43" x="320" y="2496" width="896" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="44" x="320" y="2880" width="896" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="45" x="1152" y="2560" width="64" height="320">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="46" x="320" y="2560" width="64" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="47" x="320" y="2816" width="64" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="48" x="640" y="2688" width="320" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="49" x="448" y="384" width="64" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="50" x="448" y="320" width="960" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="51" x="448" y="640" width="64" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="52" x="448" y="704" width="960" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="53" x="1344" y="384" width="64" height="320">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="54" x="768" y="1472" width="64" height="576">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="55" x="768" y="2048" width="768" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="56" x="1472" y="1472" width="64" height="576">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="57" x="2432" y="1472" width="320" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="58" x="2432" y="1536" width="64" height="384">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="59" x="2496" y="1856" width="832" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="60" x="3072" y="1472" width="256" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="62" x="3264" y="1536" width="64" height="320">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="63" x="3136" y="640" width="64" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="64" x="3136" y="896" width="64" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="65" x="3136" y="960" width="768" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="66" x="3136" y="576" width="768" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="67" x="3840" y="640" width="64" height="320">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="68" x="5248" y="320" width="64" height="192">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="69" x="5312" y="320" width="832" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="72" x="6080" y="384" width="64" height="640">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="73" x="5248" y="832" width="64" height="192">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="76" x="5312" y="960" width="768" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="77" x="4928" y="2176" width="64" height="256">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="79" x="4992" y="2176" width="1024" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="80" x="5952" y="2240" width="64" height="640">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="82" x="4928" y="2624" width="64" height="256">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="83" x="4992" y="2816" width="960" height="64">
+   <properties>
+    <property name="wall" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="84" x="832" y="320"/>
+  <object id="95" x="960" y="2048"/>
+  <object id="101" x="1216" y="2048"/>
+  <object id="102" x="960" y="2048"/>
+  <object id="104" x="2752" y="2240" width="64" height="64">
+   <properties>
+    <property name="destination" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="106" x="2176" y="832" width="64" height="64">
+   <properties>
+    <property name="destination" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="108" x="512" y="1152" width="64" height="64">
+   <properties>
+    <property name="destination" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="109" x="4608" y="1536" width="64" height="64">
+   <properties>
+    <property name="destination" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="110" x="6144" y="2880" width="64" height="64">
+   <properties>
+    <property name="destination" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="111" x="4160" y="256" width="64" height="64">
+   <properties>
+    <property name="destination" type="bool" value="true"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
