@@ -14,7 +14,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
@@ -22,16 +21,20 @@ import java.util.List;
 
 public class GameScreen extends ScreenAdapter {
 
-    private static final float WORLD_WIDTH = 1024f;
-    private static final float WORLD_HEIGHT = 768;
+    public static final float WORLD_WIDTH = 1024f;
+    public static final float WORLD_HEIGHT = 768f;
+    public static final int NUMBER_OF_BLANKS = 3;
 
     private TiledMap map;
     private OrthographicCamera camera;
     private Box2DDebugRenderer box2DDebugRenderer;
     private World world;
     private Viewport viewport;
-    private List<Body> bodies;
+    private List<Body> walls;
+    private List<Vector2> destinations;
     private Player player;
+    private List<Blank> blanks;
+    private List<Vector2> blankSpawnPoints;
 
 
     @Override
@@ -40,11 +43,22 @@ public class GameScreen extends ScreenAdapter {
         camera = new OrthographicCamera();
         viewport = new FillViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
         viewport.apply();
+        Gdx.input.setInputProcessor(new CameraInput(camera));
         world = new World(new Vector2(0, 0), true);
         box2DDebugRenderer = new Box2DDebugRenderer();
-        bodies = new ArrayList<>();
+        walls = new ArrayList<>();
+        destinations = new ArrayList<>();
+        blankSpawnPoints = new ArrayList<>();
         parseMapForObjects();
         player = new Player(createBody(128, 128, 16, 16, false), new Vector2(16, 16));
+
+        blanks = new ArrayList<>();
+        for (int i = 0; i < NUMBER_OF_BLANKS; i++) {
+            Vector2 spawnPoint = blankSpawnPoints.get(i);
+            Blank blank = new Blank(createBody((int) (spawnPoint.x), (int) spawnPoint.y, 16, 16, false), walls, destinations);
+            blanks.add(blank);
+
+        }
     }
 
     @Override
@@ -75,6 +89,9 @@ public class GameScreen extends ScreenAdapter {
         positionOfCamera.y = player.getPosition().y;
         camera.position.set(positionOfCamera);
         camera.update();
+        for (Blank blank : blanks) {
+            blank.update();
+        }
     }
 
     private Body createBody(int x, int y, int width, int height, boolean isStatic) {
@@ -108,7 +125,19 @@ public class GameScreen extends ScreenAdapter {
                 float y = (rectangle.y + rectangle.height / 2);
                 Body body = createBody((int) x, (int) y, (int) rectangle.width / 2, (int) rectangle.height / 2, true);
                 body.setUserData("wall");
-                bodies.add(body);
+                walls.add(body);
+            } else if (mapObject.getProperties().containsKey("destination")) {
+                RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObject;
+                Rectangle rectangle = rectangleMapObject.getRectangle();
+                float x = rectangle.x + rectangle.width / 2;
+                float y = rectangle.y + rectangle.height / 2;
+                destinations.add(new Vector2(x, y));
+            } else if (mapObject.getProperties().containsKey("spawnpoint")) {
+                RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObject;
+                Rectangle spawnPointRectangle = rectangleMapObject.getRectangle();
+                float xPos = spawnPointRectangle.x + spawnPointRectangle.width * .5f;
+                float yPos = spawnPointRectangle.y + spawnPointRectangle.height * .5f;
+                blankSpawnPoints.add(new Vector2(xPos, yPos));
             }
         }
     }

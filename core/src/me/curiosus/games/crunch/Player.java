@@ -18,6 +18,7 @@ public class Player {
         this.dimension = dimension;
         velocity = new Vector2(0, 0);
         speed = 100f;
+        this.body.setUserData("player");
     }
 
     public Vector2 getPosition() {

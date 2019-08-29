@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="100" height="50" tilewidth="64" tileheight="64" infinite="0" nextlayerid="3" nextobjectid="112">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="100" height="50" tilewidth="64" tileheight="64" infinite="0" nextlayerid="3" nextobjectid="120">
  <tileset firstgid="1" source="tileset.tsx"/>
  <layer id="1" name="Tile Layer 1" width="100" height="50">
   <properties>
    <property name="destination" type="bool" value="true"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJztmTESwyAMwJL2/3/u0KV3HUKAGNlo0JjDthKMyXkcxykoXoJAHyz0wUIfX96AGFp82JPu13KkTi0+emNbXZ8VPkafeepd1oc+MlLVR9beVrV/3Fkvu49q5ytSbFH7FRlSvmQfUTPZU/mSz1fREPqHPv7zWNnbIuZzWfNerY5D2n1Q7j53wO+DhT5Y6IOFPlj0+IiavVrnhiz3ZhV8RDxzReT5Uh8s9MFCHyz0wYLuo9J/yew+dkQfLHp97LJ/ZPAh+qDRe9ZovftZnV8rlH9jozWr4oOCPljooxZ3few4G9N9zFpDxn3MXKMihP5xtT/pI9bH0zFmItqH/eM618j53PNVHL93DtaRhT5Y6IPFjL4kc/kA3AYk6g==
+   eJztmjESwyAMwJK2/39zhy69ywAhYGTQoDGHjRpsk57HcZyC4iUI9MFCHyz08eMNiKHGhzXp/l4+2acaH62x9crzA9jrUTnf9REZW3b0kZ9VfWStbRnrR+/1svtYrb8ixRZ1XpEh5Uv2ETWTjcqX3F9FQ6gf+rjmMbO2RcznMud3NTsOqfdBufvcAd8PFvpgoQ8W+mDR4iNq9qqdG7Lcm63gI+KZEpH9pT5Y6IPFjj7I/4/Y0QcZuo+Vvktm97Ej+mDR6mOX8yODD9EHjdZeo/buZ3Z+tVC+jT3ds1V8UNAHC32sxV0fo2Zj8t0R3UevNeS5j55rrAihfpTOJ33E+hgdYyaifVg/yrlGzuej+iu58n/n4D6y0AcLfbDoUZekL1/L3STw
   </data>
  </layer>
  <objectgroup id="2" name="collision-layer">
@@ -238,5 +238,23 @@
     <property name="destination" type="bool" value="true"/>
    </properties>
   </object>
+  <object id="112" x="2560" y="384" width="64" height="64">
+   <properties>
+    <property name="spawnpoint" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="114" x="3840" y="1728" width="64" height="64">
+   <properties>
+    <property name="spawnpoint" type="bool" value="true"/>
+   </properties>
+  </object>
+  <object id="115" x="1728" y="2496" width="64" height="64">
+   <properties>
+    <property name="spawnpoint" type="bool" value="false"/>
+   </properties>
+  </object>
+  <object id="117" x="5888" y="-320"/>
+  <object id="118" x="3840" y="1728"/>
+  <object id="119" x="3840" y="1728"/>
  </objectgroup>
 </map>
