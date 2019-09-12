@@ -21,9 +21,9 @@ import java.util.List;
 
 public class GameScreen extends ScreenAdapter {
 
-    public static final float WORLD_WIDTH = 1024f;
-    public static final float WORLD_HEIGHT = 768f;
-    public static final int NUMBER_OF_BLANKS = 3;
+    public static final float WORLD_WIDTH = 6400f;
+    public static final float WORLD_HEIGHT = 3200f;
+    public static final int NUMBER_OF_BLANKS = 1;
 
     private TiledMap map;
     private OrthographicCamera camera;
@@ -35,6 +35,8 @@ public class GameScreen extends ScreenAdapter {
     private Player player;
     private List<Blank> blanks;
     private List<Vector2> blankSpawnPoints;
+    private List<Vector2> path;
+    private List<Vector2> path2;
 
 
     @Override
@@ -47,18 +49,23 @@ public class GameScreen extends ScreenAdapter {
         world = new World(new Vector2(0, 0), true);
         box2DDebugRenderer = new Box2DDebugRenderer();
         walls = new ArrayList<>();
-        destinations = new ArrayList<>();
-        blankSpawnPoints = new ArrayList<>();
+
+        path = new ArrayList<>();
+        path2 = new ArrayList<>();
+
         parseMapForObjects();
         player = new Player(createBody(128, 128, 16, 16, false), new Vector2(16, 16));
 
         blanks = new ArrayList<>();
-        for (int i = 0; i < NUMBER_OF_BLANKS; i++) {
-            Vector2 spawnPoint = blankSpawnPoints.get(i);
-            Blank blank = new Blank(createBody((int) (spawnPoint.x), (int) spawnPoint.y, 16, 16, false), walls, destinations);
-            blanks.add(blank);
+        Vector2 blankStartingPosition = path.get(0);
+        Blank blank = new Blank(createBody((int) (blankStartingPosition.x), (int) blankStartingPosition.y, 16, 16, false), walls, path);
+        blanks.add(blank);
 
-        }
+
+        Vector2 blankStartingPosition2 = path2.get(0);
+        Blank blank2 = new Blank(createBody((int) (blankStartingPosition2.x), (int) blankStartingPosition2.y, 16, 16, false), walls, path2);
+        blanks.add(blank2);
+
     }
 
     @Override
@@ -126,19 +133,28 @@ public class GameScreen extends ScreenAdapter {
                 Body body = createBody((int) x, (int) y, (int) rectangle.width / 2, (int) rectangle.height / 2, true);
                 body.setUserData("wall");
                 walls.add(body);
-            } else if (mapObject.getProperties().containsKey("destination")) {
-                RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObject;
-                Rectangle rectangle = rectangleMapObject.getRectangle();
-                float x = rectangle.x + rectangle.width / 2;
-                float y = rectangle.y + rectangle.height / 2;
-                destinations.add(new Vector2(x, y));
-            } else if (mapObject.getProperties().containsKey("spawnpoint")) {
-                RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObject;
-                Rectangle spawnPointRectangle = rectangleMapObject.getRectangle();
-                float xPos = spawnPointRectangle.x + spawnPointRectangle.width * .5f;
-                float yPos = spawnPointRectangle.y + spawnPointRectangle.height * .5f;
-                blankSpawnPoints.add(new Vector2(xPos, yPos));
             }
+
+        }
+
+        mapObjects = map.getLayers().get("point-layer").getObjects();
+        for (MapObject mapObject : mapObjects) {
+            RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObject;
+            Vector2 position = new Vector2();
+            position.x = rectangleMapObject.getRectangle().getX();
+            position.y = rectangleMapObject.getRectangle().getY();
+            path.add(position);
+        }
+
+
+        mapObjects = map.getLayers().get("point-layer2").getObjects();
+        for (MapObject mapObject : mapObjects) {
+            RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObject;
+            Vector2 position = new Vector2();
+            position.x = rectangleMapObject.getRectangle().getX();
+            position.y = rectangleMapObject.getRectangle().getY();
+            path2.add(position);
+            System.out.println(position);
         }
     }
 

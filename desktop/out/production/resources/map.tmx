@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="100" height="50" tilewidth="64" tileheight="64" infinite="0" nextlayerid="3" nextobjectid="120">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="100" height="50" tilewidth="64" tileheight="64" infinite="0" nextlayerid="8" nextobjectid="200">
  <tileset firstgid="1" source="tileset.tsx"/>
  <layer id="1" name="Tile Layer 1" width="100" height="50">
   <properties>
    <property name="destination" type="bool" value="true"/>
   </properties>
   <data encoding="base64" compression="zlib">
-   eJztmjESwyAMwJK2/39zhy69ywAhYGTQoDGHjRpsk57HcZyC4iUI9MFCHyz08eMNiKHGhzXp/l4+2acaH62x9crzA9jrUTnf9REZW3b0kZ9VfWStbRnrR+/1svtYrb8ixRZ1XpEh5Uv2ETWTjcqX3F9FQ6gf+rjmMbO2RcznMud3NTsOqfdBufvcAd8PFvpgoQ8W+mDR4iNq9qqdG7Lcm63gI+KZEpH9pT5Y6IPFjj7I/4/Y0QcZuo+Vvktm97Ej+mDR6mOX8yODD9EHjdZeo/buZ3Z+tVC+jT3ds1V8UNAHC32sxV0fo2Zj8t0R3UevNeS5j55rrAihfpTOJ33E+hgdYyaifVg/yrlGzuej+iu58n/n4D6y0AcLfbDoUZekL1/L3STw
+   eJztmUsWxCAIwNq5/6HnCG39QMAssvSJxCfQ3td13YLiJwj0wUIfLPTB4smHNel7Lmfy9MbHaGzZ+cnwMbtm113Whz4q0tVH1drWtX582a+6j279FSm2qPeKDOm8+th3XnJ/Rc6xPmJ8ZNe2iPlccu5VdhyiDyL6YKEPFvpgoQ8WIz6iZq+3c0OV72YdfESsIaEPFvpgoQ8W+mBB99Hpv2R1HyeiDxajPk55Pyr4EH3QGO013n77yT5fNWZzpg99dEYfvfjq48TZmO5j1R4y72PlHh0h1I+n90kfsT52x1iJaB/Wj+ezRs7n9le5nrPjEH0Q0QeLFXVJ1vIH5V8k5A==
   </data>
  </layer>
  <objectgroup id="2" name="collision-layer">
@@ -208,53 +208,95 @@
   <object id="95" x="960" y="2048"/>
   <object id="101" x="1216" y="2048"/>
   <object id="102" x="960" y="2048"/>
-  <object id="104" x="2752" y="2240" width="64" height="64">
+ </objectgroup>
+ <objectgroup id="6" name="point-layer">
+  <object id="174" x="256" y="2112">
    <properties>
-    <property name="destination" type="bool" value="true"/>
+    <property name="point" type="bool" value="true"/>
+    <property name="starting-point" type="bool" value="true"/>
    </properties>
+   <point/>
   </object>
-  <object id="106" x="2176" y="832" width="64" height="64">
+  <object id="175" x="704" y="1152">
+   <point/>
+  </object>
+  <object id="176" x="1024" y="1856">
+   <point/>
+  </object>
+  <object id="177" x="1280" y="1856">
+   <point/>
+  </object>
+  <object id="178" x="1280" y="1088">
+   <point/>
+  </object>
+  <object id="179" x="1984" y="1664">
+   <point/>
+  </object>
+  <object id="180" x="1984" y="2304">
+   <point/>
+  </object>
+  <object id="181" x="896" y="2304">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="7" name="point-layer2">
+  <object id="182" x="2048" y="192">
    <properties>
-    <property name="destination" type="bool" value="true"/>
+    <property name="point" type="bool" value="true"/>
+    <property name="starting-point" type="bool" value="true"/>
    </properties>
+   <point/>
   </object>
-  <object id="108" x="512" y="1152" width="64" height="64">
-   <properties>
-    <property name="destination" type="bool" value="true"/>
-   </properties>
+  <object id="183" x="2112" y="1280">
+   <point/>
   </object>
-  <object id="109" x="4608" y="1536" width="64" height="64">
-   <properties>
-    <property name="destination" type="bool" value="true"/>
-   </properties>
+  <object id="184" x="2880" y="1280">
+   <point/>
   </object>
-  <object id="110" x="6144" y="2880" width="64" height="64">
-   <properties>
-    <property name="destination" type="bool" value="true"/>
-   </properties>
+  <object id="185" x="2880" y="1664">
+   <point/>
   </object>
-  <object id="111" x="4160" y="256" width="64" height="64">
-   <properties>
-    <property name="destination" type="bool" value="true"/>
-   </properties>
+  <object id="186" x="2624" y="1792">
+   <point/>
   </object>
-  <object id="112" x="2560" y="384" width="64" height="64">
-   <properties>
-    <property name="spawnpoint" type="bool" value="true"/>
-   </properties>
+  <object id="187" x="3008" y="1792">
+   <point/>
   </object>
-  <object id="114" x="3840" y="1728" width="64" height="64">
-   <properties>
-    <property name="spawnpoint" type="bool" value="true"/>
-   </properties>
+  <object id="188" x="3008" y="1344">
+   <point/>
   </object>
-  <object id="115" x="1728" y="2496" width="64" height="64">
-   <properties>
-    <property name="spawnpoint" type="bool" value="false"/>
-   </properties>
+  <object id="189" x="3200" y="1344">
+   <point/>
   </object>
-  <object id="117" x="5888" y="-320"/>
-  <object id="118" x="3840" y="1728"/>
-  <object id="119" x="3840" y="1728"/>
+  <object id="190" x="3264" y="1216">
+   <point/>
+  </object>
+  <object id="191" x="3584" y="1152">
+   <point/>
+  </object>
+  <object id="192" x="3840" y="1280">
+   <point/>
+  </object>
+  <object id="193" x="3776" y="1472">
+   <point/>
+  </object>
+  <object id="194" x="3520" y="1472">
+   <point/>
+  </object>
+  <object id="195" x="2816" y="960">
+   <point/>
+  </object>
+  <object id="196" x="2816" y="832">
+   <point/>
+  </object>
+  <object id="197" x="3712" y="832">
+   <point/>
+  </object>
+  <object id="198" x="2944" y="768">
+   <point/>
+  </object>
+  <object id="199" x="1728" y="768">
+   <point/>
+  </object>
  </objectgroup>
 </map>
