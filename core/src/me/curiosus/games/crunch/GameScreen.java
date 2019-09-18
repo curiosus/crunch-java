@@ -2,8 +2,10 @@ package me.curiosus.games.crunch;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -21,8 +23,8 @@ import java.util.List;
 
 public class GameScreen extends ScreenAdapter {
 
-    public static final float WORLD_WIDTH = 6400f;
-    public static final float WORLD_HEIGHT = 3200f;
+    public static final float WORLD_WIDTH = 1025f;
+    public static final float WORLD_HEIGHT = 768;
     public static final int NUMBER_OF_BLANKS = 1;
 
     private TiledMap map;
@@ -37,6 +39,8 @@ public class GameScreen extends ScreenAdapter {
     private List<Vector2> blankSpawnPoints;
     private List<Vector2> path;
     private List<Vector2> path2;
+
+    private ShapeRenderer shapeRenderer;
 
 
     @Override
@@ -54,16 +58,22 @@ public class GameScreen extends ScreenAdapter {
         path2 = new ArrayList<>();
 
         parseMapForObjects();
-        player = new Player(createBody(128, 128, 16, 16, false), new Vector2(16, 16));
+        player = new Player(createBody(128, 128, 16, 16, false), new Vector2(16, 16), camera);
+        Gun gun = new Gun();
+        player.addGun(gun);
+        shapeRenderer = new ShapeRenderer();
+
 
         blanks = new ArrayList<>();
         Vector2 blankStartingPosition = path.get(0);
         Blank blank = new Blank(createBody((int) (blankStartingPosition.x), (int) blankStartingPosition.y, 16, 16, false), walls, path);
+        blank.getBody().setUserData("blank1");
         blanks.add(blank);
 
 
         Vector2 blankStartingPosition2 = path2.get(0);
         Blank blank2 = new Blank(createBody((int) (blankStartingPosition2.x), (int) blankStartingPosition2.y, 16, 16, false), walls, path2);
+        blank2.getBody().setUserData("blank2");
         blanks.add(blank2);
 
     }
@@ -73,6 +83,19 @@ public class GameScreen extends ScreenAdapter {
         update();
         clearScreen();
         box2DDebugRenderer.render(world, camera.combined);
+        shapeRenderer.setAutoShapeType(true);
+        shapeRenderer.begin();
+        if (player.getClickPoint() != null) {
+            shapeRenderer.setProjectionMatrix(camera.combined);
+            shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(Color.GREEN);
+            shapeRenderer.rect(player.getClickPoint().x, player.getClickPoint().y, 64, 64);
+            shapeRenderer.setColor(Color.RED);
+            shapeRenderer.rect(0, 0, 64f, 64f);
+        }
+
+        shapeRenderer.end();
+
     }
 
     @Override
@@ -137,6 +160,7 @@ public class GameScreen extends ScreenAdapter {
 
         }
 
+        //TODO Duplicate code make a function that takes the point-layer value and return the path.
         mapObjects = map.getLayers().get("point-layer").getObjects();
         for (MapObject mapObject : mapObjects) {
             RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObject;
@@ -154,7 +178,6 @@ public class GameScreen extends ScreenAdapter {
             position.x = rectangleMapObject.getRectangle().getX();
             position.y = rectangleMapObject.getRectangle().getY();
             path2.add(position);
-            System.out.println(position);
         }
     }
 

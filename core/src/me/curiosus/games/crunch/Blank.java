@@ -65,6 +65,9 @@ public class Blank {
 
 
         body.setLinearVelocity(velocity.x * speed, velocity.y * speed);
+        if (body.getUserData().equals("blank1")) {
+//            System.out.println("Blank at " + body.getPosition().x + " " + body.getPosition().y);
+        }
 
     }
 
@@ -91,5 +94,9 @@ public class Blank {
             rot = 0.0f; //Note this handles the EAST case as well as something unexpected.
         }
         return rot;
+    }
+
+    public Body getBody() {
+        return body;
     }
 }
