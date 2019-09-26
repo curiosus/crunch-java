@@ -1,16 +1,18 @@
 package me.curiosus.games.crunch;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 
 import java.util.List;
 
 public class Blank {
 
+    private Vector2 position;
+    private Vector2 dimension;
 
-    private Body body;
-    private List<Body> walls;
+    private List<Wall> walls;
     private List<Vector2> path;
     private Direction currentDirection;
     private float speed;
@@ -20,20 +22,17 @@ public class Blank {
     float maxDiff;
 
 
-
-    public Blank(Body body, List<Body> walls, List<Vector2> path) {
-        this.body = body;
+    public Blank(Vector2 position, Vector2 dimension, List<Wall> walls, List<Vector2> path) {
+        this.position = position;
+        this.dimension = dimension;
         this.walls = walls;
         this.path = path;
-        body.setUserData("blank");
         currentDirection = Direction.WEST;
-        speed = 180f;
-        this.body.setUserData("blank");
+        speed = 1.8f;
         velocity = new Vector2();
         maxDiff = 10f;
 
     }
-
 
 
     public void update() {
@@ -41,34 +40,38 @@ public class Blank {
         indexOfTarget = indexOfTarget < path.size() ? indexOfTarget : 0;
         target = path.get(indexOfTarget);
 
-        if (targetAcquired(body.getPosition(), target)) {
+        if (targetAcquired(position, target)) {
             indexOfTarget++;
             indexOfTarget = indexOfTarget < path.size() ? indexOfTarget : 0;
             target = path.get(indexOfTarget);
         }
 
-        if (body.getPosition().x - target.x > 0f) {
+        if (position.x - target.x > 0f) {
             velocity.x = -1f;
-        } else if (body.getPosition().x - target.x < 0f) {
+        } else if (position.x - target.x < 0f) {
             velocity.x = 1f;
         } else {
             velocity.x = 0f;
         }
 
-        if (body.getPosition().y - target.y > 0f) {
-           velocity.y = -1;
-        } else if (body.getPosition().y - target.y < 0f) {
-           velocity.y = 1f;
+        if (position.y - target.y > 0f) {
+            velocity.y = -1;
+        } else if (position.y - target.y < 0f) {
+            velocity.y = 1f;
         } else {
             velocity.y = 0f;
         }
 
+//        System.out.println("Blank " + position.x + " " + position.y);
+        position.x += velocity.x * speed;
+        position.y += velocity.y * speed;
 
-        body.setLinearVelocity(velocity.x * speed, velocity.y * speed);
-        if (body.getUserData().equals("blank1")) {
-//            System.out.println("Blank at " + body.getPosition().x + " " + body.getPosition().y);
-        }
 
+    }
+
+    public void draw(ShapeRenderer shapeRenderer) {
+        shapeRenderer.setColor(Color.PINK);
+        shapeRenderer.rect(position.x, position.y, dimension.x, dimension.y);
     }
 
     public void draw(SpriteBatch batch) {
@@ -82,21 +85,4 @@ public class Blank {
     }
 
 
-    private float rotation(Direction dir) {
-        float rot;
-        if (dir == Direction.NORTH) {
-            rot = (float) -Math.PI / 2.0f;
-        } else if (dir == Direction.SOUTH) {
-            rot = (float) (Math.PI / 2.0f);
-        } else if (currentDirection == Direction.WEST) {
-            rot = (float) Math.PI;
-        } else {
-            rot = 0.0f; //Note this handles the EAST case as well as something unexpected.
-        }
-        return rot;
-    }
-
-    public Body getBody() {
-        return body;
-    }
 }

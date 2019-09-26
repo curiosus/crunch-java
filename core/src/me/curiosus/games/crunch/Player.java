@@ -2,44 +2,43 @@ package me.curiosus.games.crunch;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
+
+import java.util.List;
 
 public class Player {
 
-    private Body body;
+    private Vector2 position;
     private Vector2 dimension;
     private Vector2 velocity;
+    public Vector2 previousPosition;
     private float speed;
-
     private Gun gun;
-
     private Direction currentDirection;
-    private PlayerInputProcessor mouseProcessor;
     private Vector3 clickPoint;
-
     private OrthographicCamera camera;
+    private List<Wall> walls;
 
-    public Player(Body body, Vector2 dimension, OrthographicCamera camera) {
+
+    public Player(Vector2 position, Vector2 dimension, OrthographicCamera camera, List<Wall> walls) {
         this.camera = camera;
-        this.body = body;
         this.dimension = dimension;
+        this.position = position;
+        this.walls = walls;
         velocity = new Vector2(0, 0);
-        speed = 100f;
-        this.body.setUserData("player");
+        previousPosition = new Vector2(position.x, position.y);
+        speed = 2f;
         currentDirection = Direction.EAST;
-        mouseProcessor = new PlayerInputProcessor(camera);
-//        Gdx.input.setInputProcessor(mouseProcessor);
     }
 
     public Vector2 getPosition() {
-        return body.getPosition();
+        return position;
     }
 
     public Vector2 getDimension() {
@@ -49,19 +48,11 @@ public class Player {
 
     public void update() {
 
+
         if (Gdx.input.isTouched()) {
-            Vector3 touchPos = new Vector3();
-            touchPos.set(Gdx.input.getX(),  Gdx.input.getY(), 0);
+            Vector3 touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             clickPoint = camera.unproject(touchPos);
-
-
-
-
-
-//            int x = mouseProcessor.getX();
-//            int y =  mouseProcessor.getY();
-//            Vector3 touchPos = new Vector3(x - 32f, y - 32f, 0);
-//            clickPoint = camera.unproject(touchPos);
+            System.out.println("Click " + clickPoint.x + " " + clickPoint.y);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
@@ -80,7 +71,7 @@ public class Player {
             velocity.x = 0;
         }
 
-        //TODO Expand on this to include 360 degrees (2PI Radians) instead of just 4our directions.
+        //TODO Expand on this to include 360 degrees (2PI Radians) instead of just 4our directions. Maybe.
         if (Math.abs(velocity.x) > (Math.abs(velocity.y))) {
             if (velocity.x > 0) {
                 currentDirection = Direction.EAST;
@@ -96,20 +87,58 @@ public class Player {
         }
 
         float rot = rotation(currentDirection);
-        body.setTransform(body.getPosition(), rot);
-        body.setLinearVelocity(velocity);
 
-        System.out.println("player at " + body.getPosition());
+        previousPosition.x = position.x;
+        previousPosition.y = position.y;
 
+        if (!isCollision()) {
+            position.x += velocity.x * speed;
+            position.y += velocity.y * speed;
+        }
+
+
+
+    }
+
+    private boolean isCollision() {
+        for (Wall wall : walls) {
+            Rectangle rectangle = new Rectangle(wall.getPosition().x, wall.getPosition().y, wall.getDimension().x, wall.getDimension().y);
+            float xPos = position.x;
+            float yPos = position.y;
+
+            if (currentDirection.equals(Direction.EAST)) {
+                xPos += dimension.x;
+            } else if (currentDirection.equals(Direction.WEST)) {
+                xPos -= dimension.x;
+            }
+
+            if (currentDirection.equals(Direction.NORTH)) {
+                yPos -= dimension.y;
+            } else if (currentDirection.equals(Direction.SOUTH)) {
+                yPos += dimension.y;
+            }
+
+
+            Rectangle playerRectangle = new Rectangle(xPos, yPos, dimension.x, dimension.y);
+
+            if (rectangle.contains(playerRectangle)) {
+                System.out.println(rectangle);
+                System.out.println(playerRectangle);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void draw(ShapeRenderer shapeRenderer) {
+        shapeRenderer.setColor(Color.YELLOW);
+        shapeRenderer.rect(position.x, position.y, dimension.x, dimension.y);
     }
 
     public void draw(SpriteBatch batch) {
 
     }
 
-    public Body getBody() {
-        return body;
-    }
 
     public Gun getGun() {
         return gun;
@@ -117,11 +146,6 @@ public class Player {
 
     public void addGun(Gun g) {
         gun = g;
-        FixtureDef fixtureDef = new FixtureDef();
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(10, 1, new Vector2(body.getPosition().x / 4, body.getPosition().y / 24), 0);
-        fixtureDef.shape = shape;
-        body.createFixture(fixtureDef);
     }
 
     private float rotation(Direction dir) {

@@ -14,7 +14,6 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -23,20 +22,15 @@ import java.util.List;
 
 public class GameScreen extends ScreenAdapter {
 
-    public static final float WORLD_WIDTH = 1025f;
-    public static final float WORLD_HEIGHT = 768;
-    public static final int NUMBER_OF_BLANKS = 1;
+    public static final float WORLD_WIDTH = 6400f;
+    public static final float WORLD_HEIGHT = 3200f;
 
     private TiledMap map;
     private OrthographicCamera camera;
-    private Box2DDebugRenderer box2DDebugRenderer;
-    private World world;
     private Viewport viewport;
-    private List<Body> walls;
-    private List<Vector2> destinations;
+    private List<Wall> walls;
     private Player player;
     private List<Blank> blanks;
-    private List<Vector2> blankSpawnPoints;
     private List<Vector2> path;
     private List<Vector2> path2;
 
@@ -50,30 +44,26 @@ public class GameScreen extends ScreenAdapter {
         viewport = new FillViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
         viewport.apply();
         Gdx.input.setInputProcessor(new CameraInput(camera));
-        world = new World(new Vector2(0, 0), true);
-        box2DDebugRenderer = new Box2DDebugRenderer();
         walls = new ArrayList<>();
 
         path = new ArrayList<>();
         path2 = new ArrayList<>();
 
         parseMapForObjects();
-        player = new Player(createBody(128, 128, 16, 16, false), new Vector2(16, 16), camera);
-        Gun gun = new Gun();
-        player.addGun(gun);
+        player = new Player(new Vector2(128f, 128f), new Vector2(32f, 32f), camera, walls);
+//        Gun gun = new Gun();
+//        player.addGun(gun);
         shapeRenderer = new ShapeRenderer();
 
 
         blanks = new ArrayList<>();
         Vector2 blankStartingPosition = path.get(0);
-        Blank blank = new Blank(createBody((int) (blankStartingPosition.x), (int) blankStartingPosition.y, 16, 16, false), walls, path);
-        blank.getBody().setUserData("blank1");
+        Blank blank = new Blank(blankStartingPosition, new Vector2(64, 64), walls, path);
         blanks.add(blank);
 
 
         Vector2 blankStartingPosition2 = path2.get(0);
-        Blank blank2 = new Blank(createBody((int) (blankStartingPosition2.x), (int) blankStartingPosition2.y, 16, 16, false), walls, path2);
-        blank2.getBody().setUserData("blank2");
+        Blank blank2 = new Blank(blankStartingPosition2, new Vector2(64, 64), walls, path2);
         blanks.add(blank2);
 
     }
@@ -82,20 +72,31 @@ public class GameScreen extends ScreenAdapter {
     public void render(float delta) {
         update();
         clearScreen();
-        box2DDebugRenderer.render(world, camera.combined);
         shapeRenderer.setAutoShapeType(true);
         shapeRenderer.begin();
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
         if (player.getClickPoint() != null) {
-            shapeRenderer.setProjectionMatrix(camera.combined);
-            shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(Color.GREEN);
             shapeRenderer.rect(player.getClickPoint().x, player.getClickPoint().y, 64, 64);
-            shapeRenderer.setColor(Color.RED);
-            shapeRenderer.rect(0, 0, 64f, 64f);
+        }
+
+        drawWalls();
+
+        player.draw(shapeRenderer);
+        for (Blank blank : blanks) {
+            blank.draw(shapeRenderer);
         }
 
         shapeRenderer.end();
 
+    }
+
+    private void drawWalls() {
+        for (Wall wall : walls) {
+            shapeRenderer.setColor(Color.PURPLE);
+            shapeRenderer.rect(wall.getPosition().x, wall.getPosition().y, wall.getDimension().x, wall.getDimension().y);
+        }
     }
 
     @Override
@@ -106,13 +107,10 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        box2DDebugRenderer.dispose();
-        world.dispose();
         map.dispose();
     }
 
     private void update() {
-        world.step(1.f / 60f, 6, 2);
         player.update();
         Vector3 positionOfCamera = camera.position;
         positionOfCamera.x = player.getPosition().x;
@@ -124,25 +122,9 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
-    private Body createBody(int x, int y, int width, int height, boolean isStatic) {
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = isStatic ? BodyDef.BodyType.StaticBody : BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(x, y);
-        bodyDef.fixedRotation = true;
-        Body body = world.createBody(bodyDef);
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width, height);
-        FixtureDef fixtureDef = new FixtureDef();
-
-        fixtureDef.shape = shape;
-        if (!isStatic) {
-            fixtureDef.restitution = 1.5f;
-            fixtureDef.density = .05f;
-            fixtureDef.friction = 10f;
-        }
-        body.createFixture(fixtureDef);
-        shape.dispose();
-        return body;
+    private Wall createWall(int x, int y, int width, int height) {
+        Wall wall = new Wall(new Vector2(x, y), new Vector2(width, height));
+        return wall;
     }
 
     private void parseMapForObjects() {
@@ -151,33 +133,28 @@ public class GameScreen extends ScreenAdapter {
             if (mapObject.getProperties().containsKey("wall")) {
                 RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObject;
                 Rectangle rectangle = rectangleMapObject.getRectangle();
-                float x = (rectangle.x + rectangle.width / 2);
-                float y = (rectangle.y + rectangle.height / 2);
-                Body body = createBody((int) x, (int) y, (int) rectangle.width / 2, (int) rectangle.height / 2, true);
-                body.setUserData("wall");
-                walls.add(body);
+                float x = rectangle.x;
+                float y = rectangle.y;
+                Wall wall = createWall((int) x, (int) y, (int) rectangle.width, (int) rectangle.height);
+                walls.add(wall);
             }
 
         }
 
-        //TODO Duplicate code make a function that takes the point-layer value and return the path.
-        mapObjects = map.getLayers().get("point-layer").getObjects();
+
+        createPointLayer("point-layer", path);
+        createPointLayer("point-layer2", path2);
+
+    }
+
+    private void createPointLayer(String pointLayer, List<Vector2> pth) {
+        MapObjects mapObjects = map.getLayers().get(pointLayer).getObjects();
         for (MapObject mapObject : mapObjects) {
             RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObject;
             Vector2 position = new Vector2();
             position.x = rectangleMapObject.getRectangle().getX();
             position.y = rectangleMapObject.getRectangle().getY();
-            path.add(position);
-        }
-
-
-        mapObjects = map.getLayers().get("point-layer2").getObjects();
-        for (MapObject mapObject : mapObjects) {
-            RectangleMapObject rectangleMapObject = (RectangleMapObject) mapObject;
-            Vector2 position = new Vector2();
-            position.x = rectangleMapObject.getRectangle().getX();
-            position.y = rectangleMapObject.getRectangle().getY();
-            path2.add(position);
+            pth.add(position);
         }
     }
 
