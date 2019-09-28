@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -17,7 +16,7 @@ public class Player {
     private Vector2 position;
     private Vector2 dimension;
     private Vector2 velocity;
-    public Vector2 previousPosition;
+    private Vector2 proposedPosition;
     private float speed;
     private Gun gun;
     private Direction currentDirection;
@@ -32,7 +31,8 @@ public class Player {
         this.position = position;
         this.walls = walls;
         velocity = new Vector2(0, 0);
-        previousPosition = new Vector2(position.x, position.y);
+        proposedPosition = new Vector2(0, 0);
+
         speed = 2f;
         currentDirection = Direction.EAST;
     }
@@ -88,10 +88,12 @@ public class Player {
 
         float rot = rotation(currentDirection);
 
-        previousPosition.x = position.x;
-        previousPosition.y = position.y;
+        proposedPosition.x = position.x + velocity.x * speed;
+        proposedPosition.y = position.y + velocity.y * speed;
 
-        if (!isCollision()) {
+        if (isCollision(proposedPosition)) {
+            //do nothing
+        } else {
             position.x += velocity.x * speed;
             position.y += velocity.y * speed;
         }
@@ -100,35 +102,19 @@ public class Player {
 
     }
 
-    private boolean isCollision() {
+    private boolean isCollision(Vector2 pos) {
         for (Wall wall : walls) {
-            Rectangle rectangle = new Rectangle(wall.getPosition().x, wall.getPosition().y, wall.getDimension().x, wall.getDimension().y);
-            float xPos = position.x;
-            float yPos = position.y;
-
-            if (currentDirection.equals(Direction.EAST)) {
-                xPos += dimension.x;
-            } else if (currentDirection.equals(Direction.WEST)) {
-                xPos -= dimension.x;
-            }
-
-            if (currentDirection.equals(Direction.NORTH)) {
-                yPos -= dimension.y;
-            } else if (currentDirection.equals(Direction.SOUTH)) {
-                yPos += dimension.y;
-            }
-
-
-            Rectangle playerRectangle = new Rectangle(xPos, yPos, dimension.x, dimension.y);
-
-            if (rectangle.contains(playerRectangle)) {
-                System.out.println(rectangle);
-                System.out.println(playerRectangle);
+            if (pos.x < wall.getPosition().x + wall.getDimension().x
+                    && pos.x + dimension.x > wall.getPosition().x
+                    && pos.y < wall.getPosition().y + wall.getDimension().y
+                    && pos.y + dimension.y > wall.getPosition().y) {
                 return true;
             }
         }
+
         return false;
     }
+
 
     public void draw(ShapeRenderer shapeRenderer) {
         shapeRenderer.setColor(Color.YELLOW);
