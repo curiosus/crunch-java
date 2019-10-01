@@ -51,8 +51,8 @@ public class GameScreen extends ScreenAdapter {
 
         parseMapForObjects();
         player = new Player(new Vector2(128f, 128f), new Vector2(32f, 32f), camera, walls);
-//        Gun gun = new Gun();
-//        player.addGun(gun);
+        Gun gun = new Gun();
+        player.addGun(gun);
         shapeRenderer = new ShapeRenderer();
 
 

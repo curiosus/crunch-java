@@ -98,6 +98,7 @@ public class Player {
             position.y += velocity.y * speed;
         }
 
+        gun.update(currentDirection);
 
 
     }
@@ -119,6 +120,11 @@ public class Player {
     public void draw(ShapeRenderer shapeRenderer) {
         shapeRenderer.setColor(Color.YELLOW);
         shapeRenderer.rect(position.x, position.y, dimension.x, dimension.y);
+        shapeRenderer.setColor(Color.RED);
+
+        Vector2 gunPos = calculateGunRect();
+
+        shapeRenderer.rect(gunPos.x, gunPos.y, gun.getDimension().x, gun.getDimension().y);
     }
 
     public void draw(SpriteBatch batch) {
@@ -132,6 +138,30 @@ public class Player {
 
     public void addGun(Gun g) {
         gun = g;
+    }
+
+    private Vector2 calculateGunRect() {
+
+        Vector2 gunPos = new Vector2();
+
+        if (currentDirection.equals(Direction.EAST)) {
+            gunPos.x = position.x + dimension.x;
+            gunPos.y = position.y + dimension.y / 2;
+        } else if (currentDirection.equals(Direction.WEST)) {
+            gunPos.x = position.x - gun.getDimension().x;
+            gunPos.y = position.y + dimension.y / 2;
+        } else if (currentDirection.equals(Direction.SOUTH)) {
+            gunPos.x = position.x + dimension.x / 2;
+            gunPos.y = position.y + dimension.y;
+        } else if (currentDirection.equals(Direction.NORTH)) {
+            gunPos.x = position.x + dimension.x / 2;
+            gunPos.y = position.y - gun.getDimension().y;
+        } else {
+            System.out.println("WTF Direction is this " + currentDirection);
+        }
+
+
+        return gunPos;
     }
 
     private float rotation(Direction dir) {
