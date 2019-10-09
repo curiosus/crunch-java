@@ -34,6 +34,8 @@ public class GameScreen extends ScreenAdapter {
     private List<Vector2> path;
     private List<Vector2> path2;
 
+    private List<Bullet> bullets;
+
     private ShapeRenderer shapeRenderer;
 
 
@@ -50,8 +52,9 @@ public class GameScreen extends ScreenAdapter {
         path2 = new ArrayList<>();
 
         parseMapForObjects();
+        bullets = new ArrayList<>();
         player = new Player(new Vector2(128f, 128f), new Vector2(32f, 32f), camera, walls);
-        Gun gun = new Gun();
+        Gun gun = new Gun(player.getPosition(), bullets);
         player.addGun(gun);
         shapeRenderer = new ShapeRenderer();
 
@@ -76,16 +79,16 @@ public class GameScreen extends ScreenAdapter {
         shapeRenderer.begin();
         shapeRenderer.setProjectionMatrix(camera.combined);
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-        if (player.getClickPoint() != null) {
-            shapeRenderer.setColor(Color.GREEN);
-            shapeRenderer.rect(player.getClickPoint().x, player.getClickPoint().y, 64, 64);
-        }
 
         drawWalls();
 
         player.draw(shapeRenderer);
         for (Blank blank : blanks) {
             blank.draw(shapeRenderer);
+        }
+
+        for (Bullet bullet : bullets) {
+            bullet.draw(shapeRenderer);
         }
 
         shapeRenderer.end();
@@ -117,6 +120,9 @@ public class GameScreen extends ScreenAdapter {
         positionOfCamera.y = player.getPosition().y;
         camera.position.set(positionOfCamera);
         camera.update();
+        for (Bullet bullet : bullets) {
+            bullet.update();
+        }
         for (Blank blank : blanks) {
             blank.update();
         }

@@ -52,7 +52,8 @@ public class Player {
         if (Gdx.input.isTouched()) {
             Vector3 touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             clickPoint = camera.unproject(touchPos);
-            System.out.println("Click " + clickPoint.x + " " + clickPoint.y);
+            gun.fire(clickPoint);
+
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
@@ -121,9 +122,7 @@ public class Player {
         shapeRenderer.setColor(Color.YELLOW);
         shapeRenderer.rect(position.x, position.y, dimension.x, dimension.y);
         shapeRenderer.setColor(Color.RED);
-
         Vector2 gunPos = calculateGunRect();
-
         shapeRenderer.rect(gunPos.x, gunPos.y, gun.getDimension().x, gun.getDimension().y);
     }
 
