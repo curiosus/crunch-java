@@ -5,6 +5,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
@@ -22,8 +23,8 @@ import java.util.List;
 
 public class GameScreen extends ScreenAdapter {
 
-    public static final float WORLD_WIDTH = 6400f;
-    public static final float WORLD_HEIGHT = 3200f;
+    public static final float WORLD_WIDTH = 1024f;
+    public static final float WORLD_HEIGHT = 768f;
 
     private TiledMap map;
     private OrthographicCamera camera;
@@ -37,6 +38,7 @@ public class GameScreen extends ScreenAdapter {
     private List<Bullet> bullets;
 
     private ShapeRenderer shapeRenderer;
+    private SpriteBatch spriteBatch;
 
 
     @Override
@@ -47,16 +49,18 @@ public class GameScreen extends ScreenAdapter {
         viewport.apply();
         Gdx.input.setInputProcessor(new CameraInput(camera));
         walls = new ArrayList<>();
+        spriteBatch = new SpriteBatch();
 
         path = new ArrayList<>();
         path2 = new ArrayList<>();
 
         parseMapForObjects();
         bullets = new ArrayList<>();
-        player = new Player(new Vector2(128f, 128f), new Vector2(32f, 32f), camera, walls);
+        player = new Player(new Vector2(128f, 128f), new Vector2(64f, 64f), camera, walls);
         Gun gun = new Gun(player.getPosition(), bullets);
         player.addGun(gun);
         shapeRenderer = new ShapeRenderer();
+        spriteBatch.setProjectionMatrix(camera.combined);
 
 
         blanks = new ArrayList<>();
@@ -68,6 +72,8 @@ public class GameScreen extends ScreenAdapter {
         Vector2 blankStartingPosition2 = path2.get(0);
         Blank blank2 = new Blank(blankStartingPosition2, new Vector2(64, 64), walls, path2);
         blanks.add(blank2);
+
+        camera.update();
 
     }
 
@@ -82,7 +88,6 @@ public class GameScreen extends ScreenAdapter {
 
         drawWalls();
 
-        player.draw(shapeRenderer);
         for (Blank blank : blanks) {
             blank.draw(shapeRenderer);
         }
@@ -92,6 +97,11 @@ public class GameScreen extends ScreenAdapter {
         }
 
         shapeRenderer.end();
+
+        spriteBatch.begin();
+        spriteBatch.setProjectionMatrix(camera.combined);
+        player.draw(spriteBatch);
+        spriteBatch.end();
 
     }
 
@@ -114,7 +124,6 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void update() {
-        player.update();
         Vector3 positionOfCamera = camera.position;
         positionOfCamera.x = player.getPosition().x;
         positionOfCamera.y = player.getPosition().y;
@@ -126,6 +135,9 @@ public class GameScreen extends ScreenAdapter {
         for (Blank blank : blanks) {
             blank.update();
         }
+
+
+        player.update();
     }
 
     private Wall createWall(int x, int y, int width, int height) {

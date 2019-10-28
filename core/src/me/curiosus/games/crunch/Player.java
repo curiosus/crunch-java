@@ -2,10 +2,11 @@ package me.curiosus.games.crunch;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -19,10 +20,11 @@ public class Player {
     private Vector2 proposedPosition;
     private float speed;
     private Gun gun;
-    private Direction currentDirection;
     private Vector3 clickPoint;
     private OrthographicCamera camera;
     private List<Wall> walls;
+    private float angle;
+    private Sprite sprite;
 
 
     public Player(Vector2 position, Vector2 dimension, OrthographicCamera camera, List<Wall> walls) {
@@ -32,9 +34,11 @@ public class Player {
         this.walls = walls;
         velocity = new Vector2(0, 0);
         proposedPosition = new Vector2(0, 0);
-
         speed = 2f;
-        currentDirection = Direction.EAST;
+        sprite = new Sprite(new Texture(Gdx.files.internal("core/assets/player.png")));
+        sprite.setSize(dimension.x, dimension.y);
+        sprite.setPosition(position.x, position.y);
+
     }
 
     public Vector2 getPosition() {
@@ -47,6 +51,18 @@ public class Player {
 
 
     public void update() {
+
+        float originX = sprite.getOriginX() + sprite.getX();
+        float originY = sprite.getOriginY() + sprite.getY();
+        float mouseX = Gdx.input.getX();
+        float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
+        Vector3 thing = new Vector3(mouseX, mouseY, 0);
+        camera.unproject(thing);
+        angle = MathUtils.atan2(thing.y - originY, thing.x - originX) * MathUtils.radiansToDegrees;
+        if (angle < 0) {
+            angle += 360f;
+        }
+        angle *= -1;
 
 
         if (Gdx.input.isTouched()) {
@@ -72,22 +88,7 @@ public class Player {
             velocity.x = 0;
         }
 
-        //TODO Expand on this to include 360 degrees (2PI Radians) instead of just 4our directions. Maybe.
-        if (Math.abs(velocity.x) > (Math.abs(velocity.y))) {
-            if (velocity.x > 0) {
-                currentDirection = Direction.EAST;
-            } else if (velocity.x < 0) {
-                currentDirection = Direction.WEST;
-            }
-        } else if (Math.abs(velocity.y) > (Math.abs(velocity.x))) {
-            if (velocity.y > 0) {
-                currentDirection = Direction.SOUTH;
-            } else if (velocity.y < 0) {
-                currentDirection = Direction.NORTH;
-            }
-        }
 
-        float rot = rotation(currentDirection);
 
         proposedPosition.x = position.x + velocity.x * speed;
         proposedPosition.y = position.y + velocity.y * speed;
@@ -99,7 +100,9 @@ public class Player {
             position.y += velocity.y * speed;
         }
 
-        gun.update(currentDirection);
+        sprite.setPosition(position.x, position.y);
+
+
 
 
     }
@@ -118,67 +121,14 @@ public class Player {
     }
 
 
-    public void draw(ShapeRenderer shapeRenderer) {
-        shapeRenderer.setColor(Color.YELLOW);
-        shapeRenderer.rect(position.x, position.y, dimension.x, dimension.y);
-        shapeRenderer.setColor(Color.RED);
-        Vector2 gunPos = calculateGunRect();
-        shapeRenderer.rect(gunPos.x, gunPos.y, gun.getDimension().x, gun.getDimension().y);
-    }
-
     public void draw(SpriteBatch batch) {
-
-    }
-
-
-    public Gun getGun() {
-        return gun;
+        sprite.setRotation(angle);
+        sprite.draw(batch);
     }
 
     public void addGun(Gun g) {
         gun = g;
     }
 
-    private Vector2 calculateGunRect() {
-
-        Vector2 gunPos = new Vector2();
-
-        if (currentDirection.equals(Direction.EAST)) {
-            gunPos.x = position.x + dimension.x;
-            gunPos.y = position.y + dimension.y / 2;
-        } else if (currentDirection.equals(Direction.WEST)) {
-            gunPos.x = position.x - gun.getDimension().x;
-            gunPos.y = position.y + dimension.y / 2;
-        } else if (currentDirection.equals(Direction.SOUTH)) {
-            gunPos.x = position.x + dimension.x / 2;
-            gunPos.y = position.y + dimension.y;
-        } else if (currentDirection.equals(Direction.NORTH)) {
-            gunPos.x = position.x + dimension.x / 2;
-            gunPos.y = position.y - gun.getDimension().y;
-        } else {
-            System.out.println("WTF Direction is this " + currentDirection);
-        }
-
-
-        return gunPos;
-    }
-
-    private float rotation(Direction dir) {
-        float rot;
-        if (dir == Direction.NORTH) {
-            rot = (float) -Math.PI / 2.0f;
-        } else if (dir == Direction.SOUTH) {
-            rot = (float) (Math.PI / 2.0f);
-        } else if (currentDirection == Direction.WEST) {
-            rot = (float) Math.PI;
-        } else {
-            rot = 0.0f; //Note this handles the EAST case as well as something unexpected.
-        }
-        return rot;
-    }
-
-    public Vector3 getClickPoint() {
-        return clickPoint;
-    }
 
 }

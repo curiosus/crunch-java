@@ -17,7 +17,7 @@ public class Gun {
     public Gun(Vector2 pos, List<Bullet> bullets) {
         position = pos;
         this.bullets = bullets;
-        verticalDimension = new Vector2(2, 8);
+//        verticalDimension = new Vector2(2, 8);
         horizontalDimension = new Vector2(8, 2);
         dimension = horizontalDimension;
 
@@ -27,14 +27,6 @@ public class Gun {
         return dimension;
     }
 
-
-    public void update(Direction direction) {
-        if (direction.equals(Direction.NORTH) || direction.equals(Direction.SOUTH)) {
-            dimension = verticalDimension;
-        } else {
-            dimension = horizontalDimension;
-        }
-    }
 
 
     public void fire(Vector3 target) {

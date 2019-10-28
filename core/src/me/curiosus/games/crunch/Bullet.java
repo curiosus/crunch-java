@@ -7,32 +7,46 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Bullet {
 
-    private Vector2 startPosition;
-    private Vector3 target;
-    private Vector2 velocity;
+    private Vector2 worldDimension;
     private Vector2 position;
+    private Vector2 velocity;
     private Vector2 acceleration;
+    private Vector2 dimension;
+    private float mass;
+    private Vector2 target;
+    private Vector2 frc;
 
-    public Bullet(Vector2 startPosition, Vector3 target) {
-        this.startPosition = startPosition;
-        this.target = target;
+
+    public Bullet(Vector2 startPosition, Vector3 targetV3) {
+        position = startPosition;
+        target = new Vector2(targetV3.x, targetV3.y);
         position = new Vector2(startPosition.x, startPosition.y);
         velocity = new Vector2(0, 0);
         acceleration = new Vector2(0, 0);
+        mass = 10f;
+        frc = new Vector2(20, 20);
     }
 
     public void draw(ShapeRenderer shapeRenderer) {
         shapeRenderer.setColor(Color.BLUE);
         shapeRenderer.ellipse(position.x, position.y, 10, 10);
-
     }
 
     public void update() {
-        target = target.sub(position.x, position.y, 0);
-        acceleration.add(target.x / 1000, target.y / 1000);
+        applyForce(frc);
+        target = target.sub(position.x, position.y);
+        target.nor();
         velocity.add(acceleration);
         position.add(velocity);
+        acceleration.setZero();
+    }
 
+    public void applyForce(Vector2 force) {
+        //f=ma
+        //a = f/m
+        force.x = force.x / mass;
+        force.y = force.y / mass;
+        acceleration.add(force);
 
     }
 
