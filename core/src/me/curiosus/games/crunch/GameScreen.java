@@ -92,14 +92,15 @@ public class GameScreen extends ScreenAdapter {
             blank.draw(shapeRenderer);
         }
 
-        for (Bullet bullet : bullets) {
-            bullet.draw(shapeRenderer);
-        }
 
         shapeRenderer.end();
 
         spriteBatch.begin();
+
         spriteBatch.setProjectionMatrix(camera.combined);
+        for (Bullet bullet : bullets) {
+            bullet.draw(spriteBatch);
+        }
         player.draw(spriteBatch);
         spriteBatch.end();
 

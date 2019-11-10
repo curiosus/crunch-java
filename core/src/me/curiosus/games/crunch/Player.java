@@ -55,19 +55,19 @@ public class Player {
         float originX = sprite.getOriginX() + sprite.getX();
         float originY = sprite.getOriginY() + sprite.getY();
         float mouseX = Gdx.input.getX();
-        float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
+        float mouseY = Gdx.input.getY();
         Vector3 thing = new Vector3(mouseX, mouseY, 0);
         camera.unproject(thing);
         angle = MathUtils.atan2(thing.y - originY, thing.x - originX) * MathUtils.radiansToDegrees;
         if (angle < 0) {
             angle += 360f;
         }
-        angle *= -1;
 
 
         if (Gdx.input.isTouched()) {
             Vector3 touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             clickPoint = camera.unproject(touchPos);
+//            gun.getDimension().rotate(angle);
             gun.fire(clickPoint);
 
         }
@@ -89,7 +89,6 @@ public class Player {
         }
 
 
-
         proposedPosition.x = position.x + velocity.x * speed;
         proposedPosition.y = position.y + velocity.y * speed;
 
@@ -102,7 +101,9 @@ public class Player {
 
         sprite.setPosition(position.x, position.y);
 
+        Vector2 pos = new Vector2(position.x + dimension.x / 2, position.y + dimension.y / 2);
 
+        gun.setPosition(pos);
 
 
     }
@@ -128,6 +129,7 @@ public class Player {
 
     public void addGun(Gun g) {
         gun = g;
+
     }
 
 
