@@ -65,12 +65,12 @@ public class GameScreen extends ScreenAdapter {
 
         blanks = new ArrayList<>();
         Vector2 blankStartingPosition = path.get(0);
-        Blank blank = new Blank(blankStartingPosition, new Vector2(64, 64), walls, path);
+        Blank blank = new Blank(blankStartingPosition, new Vector2(64, 64), walls, path, player);
         blanks.add(blank);
 
 
         Vector2 blankStartingPosition2 = path2.get(0);
-        Blank blank2 = new Blank(blankStartingPosition2, new Vector2(64, 64), walls, path2);
+        Blank blank2 = new Blank(blankStartingPosition2, new Vector2(64, 64), walls, path2, player);
         blanks.add(blank2);
 
         camera.update();

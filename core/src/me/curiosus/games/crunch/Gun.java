@@ -38,7 +38,6 @@ public class Gun {
     }
 
     public void fire(Vector3 target) {
-        System.out.println(timeSinceLastFired);
         if (firingInterval < System.currentTimeMillis() -  timeSinceLastFired) {
             Bullet bullet = new Bullet(position, target);
             timeSinceLastFired = System.currentTimeMillis(); //todo probably don't want all these system calls.
