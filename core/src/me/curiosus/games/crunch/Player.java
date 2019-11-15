@@ -57,7 +57,7 @@ public class Player {
         float mouseX = Gdx.input.getX();
         float mouseY = Gdx.input.getY();
         Vector3 mousePosition = new Vector3(mouseX, mouseY, 0);
-        camera.unproject(mousePosition);
+        mousePosition = camera.unproject(mousePosition);
         angle = MathUtils.atan2(mousePosition.y - originY, mousePosition.x - originX) * MathUtils.radiansToDegrees;
         if (angle < 0) {
             angle += 360f;

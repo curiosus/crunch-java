@@ -1,10 +1,15 @@
 package me.curiosus.games.crunch;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
+import com.sun.org.apache.xpath.internal.operations.Or;
 
 import java.util.List;
 
@@ -21,9 +26,12 @@ public class Blank {
     private Vector2 destination;
     private int indexOfDestination;
     private float maxDiff;
+    private float angle;
 
     private Gun gun;
     private Player player;
+    private Sprite sprite;
+    private OrthographicCamera camera;
 
     enum Behavior {
         PATROL,
@@ -33,7 +41,8 @@ public class Blank {
     Behavior behavior = Behavior.PATROL;
 
 
-    public Blank(Vector2 position, Vector2 dimension, List<Wall> walls, List<Vector2> path, Player player) {
+    public Blank(Vector2 position, Vector2 dimension, List<Wall> walls, List<Vector2> path, Player player, OrthographicCamera camera) {
+        this.camera = camera;
         this.position = position;
         this.dimension = dimension;
         this.walls = walls;
@@ -43,6 +52,9 @@ public class Blank {
         speed = 1.8f;
         velocity = new Vector2();
         maxDiff = 10f;
+        sprite = new Sprite(new Texture(Gdx.files.internal(("core/assets/blank.png"))));
+        sprite.setSize(dimension.x, dimension.y);
+        sprite.setPosition(position.x, position.y);
 
     }
 
@@ -79,9 +91,18 @@ public class Blank {
                 velocity.y = 0f;
             }
 
-//        System.out.println("Blank " + position.x + " " + position.y);
             position.x += velocity.x * speed;
             position.y += velocity.y * speed;
+
+            sprite.setPosition(position.x, position.y);
+
+            float originX = sprite.getOriginX() + sprite.getX();
+            float originY = sprite.getOriginY() + sprite.getY();
+            Vector3 destPosition = new Vector3(destination.x, destination.y, 0);
+            angle = MathUtils.atan2(destPosition.y - originY, destPosition.x - originX) * MathUtils.radiansToDegrees;
+            if (angle < 0) {
+                angle += 360;
+            }
         }
 
     }
@@ -92,7 +113,8 @@ public class Blank {
     }
 
     public void draw(SpriteBatch batch) {
-
+        sprite.setRotation(angle);
+        sprite.draw(batch);
     }
 
     public void addGun(Gun g) {
@@ -112,6 +134,8 @@ public class Blank {
         } else {
             System.out.println("                              \n\n\n\n\n");
         }
+
+        Polygon polygon = new Polygon();
 
         return Behavior.PATROL;
     }
